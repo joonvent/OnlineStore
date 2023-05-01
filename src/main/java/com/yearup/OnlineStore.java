@@ -9,45 +9,48 @@ public class OnlineStore {
 
     public static void main(String[] args) {
 
-      ArrayList<Product> inventory = new ArrayList<>();
-      ArrayList<Product> cart = new ArrayList<>();
+        ArrayList<Product> inventory = new ArrayList<>();
+        ArrayList<Product> cart = new ArrayList<>();
 
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
         while (choice != 3) {
-            System.out.println("Store Home Screen");
-            System.out.println("------------------");
-            System.out.println("1. Show Products");
-            System.out.println("2. Show Cart");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice (1-3): ");
+            if (choice != 2) {
+                System.out.println("Store Home Screen");
+                System.out.println("------------------");
+                System.out.println("1. Show Products");
+                System.out.println("2. Show Cart");
+                System.out.println("3. Exit");
+                System.out.print("Enter your choice (1-3): ");
 
-            choice = scanner.nextInt();
-            scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    showProducts(getInventory(), scanner);
-                    break;
+                choice = scanner.nextInt();
+                scanner.nextLine();
 
-                case 2:
+                switch (choice) {
+                    case 1:
+                        showProducts(getInventory(), cart, scanner);
+                        break;
 
-                    showCart(cart);
+                    case 2:
 
-                    break;
+                        showCart(cart, scanner);
 
-                case 3:
-                    System.out.println("Goodbye!");
-                    break;
+                        break;
 
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
+                    case 3:
+                        System.out.println("Goodbye!");
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                        break;
+                }
             }
         }
     }
 
-    private static ArrayList<Product> getInventory(){
+    private static ArrayList<Product> getInventory() {
         ArrayList<Product> inventory = new ArrayList<>();
         String storeInventory = "inventory.csv";
         try {
@@ -62,13 +65,13 @@ public class OnlineStore {
             }
             br.close();
 
-        }catch (Exception e ) {
+        } catch (Exception e) {
 
         }
         return inventory;
     }
 
-    public static void showProducts(ArrayList<Product> inventory, Scanner scanner){
+    public static void showProducts(ArrayList<Product> inventory, ArrayList<Product> cart, Scanner scanner) {
         for (Product p : inventory) {
             System.out.println(p.getId() + " - " + p.getName() + " - $" + p.getPrice());
         }
@@ -79,16 +82,24 @@ public class OnlineStore {
             itemID = scanner.nextLine();
 
 
-            if (itemID.equalsIgnoreCase("x")) {
+            if (itemID.equalsIgnoreCase("X")) {
                 break;
             }
-
+            boolean itemFound = false;
+            for (Product p : inventory) {
+                if (p.getId().equalsIgnoreCase(itemID)) {
+                    cart.add(p);
+                    System.out.println(p.getName() + " added to cart.");
+                    itemFound = true;
+                    break;
+                }
+            }
 
 
         } while (true);
     }
 
-    public static void showCart(ArrayList<Product> cart) {
+    public static void showCart(ArrayList<Product> cart, Scanner scanner) {
         System.out.println("Your Cart:");
         double totalAmount = 0;
         for (Product p : cart) {
@@ -96,16 +107,21 @@ public class OnlineStore {
             totalAmount += p.getPrice();
         }
         System.out.println("Total Amount: $" + totalAmount);
+        do {
+            String checkOut;
+            System.out.println("Please Enter C To Checkout or X To Go Back Home:");
+            checkOut = scanner.nextLine();
+
+
+            if (checkOut.equalsIgnoreCase("x")) {
+                break;
+
+            }
+        } while (true);
+
+
     }
-
-
-
-
-
-
-
-
-    }
+}
 
 
 
